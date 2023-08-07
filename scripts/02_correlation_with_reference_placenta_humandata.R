@@ -1,4 +1,4 @@
-# This script outputs plots of the correlation with reference placenta clusters
+# This script outputs plots of the correlation with reference placenta clusters: paper Fig 1C
 # code adapted from https://github.com/archavan/covid-placenta
 
 suppressPackageStartupMessages({library(org.Hs.eg.db)
@@ -10,8 +10,10 @@ suppressPackageStartupMessages({library(org.Hs.eg.db)
   
 })
 
+source('scripts/00_get_started.R')
+
 #  load data ----
-so_file="/cluster/tufts/slonimlab/rbator01/human_scrna_edlow_2021/seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE_norm.rds"
+so_file="analysis/seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE.rds"
 so = readRDS(so_file)
 Idents(so) = "sub_cluster_names"
 DefaultAssay(so) <- "RNA"
@@ -97,8 +99,6 @@ library(viridis)
 # Plot all, this is not the most informative plot, it is easier to see if you break down the individual datasets as below -----
 
 # output directory for plots
-outdir="/cluster/tufts/slonimlab/rbator01/human_scrna_edlow_2021/plots_compare_reference/"
-
 p <- ggplot(data = cormat,
             aes(Var1, Var2, fill = value)) +
   geom_tile(colour = "white") +
@@ -126,7 +126,7 @@ p <- ggplot(data = cormat,
         legend.key.size = unit(0.8, units = c('lines')))
 
 show(p)
-ggsave(p, filename = paste0(outdir, "~/analysis/plots/ref_compare/pl_subset_clusters_res_0.2_vs_reference_corrplot_clusters.pdf"),
+ggsave(p, filename = "analysis/plots/ref_compare/pl_subset_clusters_res_0.2_vs_reference_corrplot_clusters.pdf",
        device = "pdf", width = 15, height = 7, units = "in")
 
 
@@ -191,18 +191,18 @@ clustAnnoPlot_notop <- function(dat, query, reference, plot_title) {
   return(p)
 }
 
-### Against Vento-Tormo et al
+# Vento-Tormo et al
 anno.vento <- clustAnnoPlot(dat = cormat, query = "P", reference = "v", plot_title="Vento-Tormo et al")
 cowplot::ggsave2(anno.vento, device = "pdf", width = 8, height = 4, units = "in",
                  filename = paste0(outdir, "vento_subset_heatmap.pdf"))
 
-## Against "Lu-Culligan et al
+#"Lu-Culligan et al
 anno.covid <- clustAnnoPlot(dat = cormat, query = c("P"), reference = "l", plot_title="Lu-Culligan et al")
 cowplot::ggsave2(anno.covid, device = "pdf", width = 6, height = 4, units = "in",
-                 filename = paste0(outdir, "lu_c_subset_heatmap.pdf"))
+                 filename = "plots_compare_reference/lu_c_subset_heatmap.pdf")
 show(anno.covid)
-### Against Suryavanshi et al
+#Suryavanshi et al
 anno.surya <- clustAnnoPlot(dat = cormat, query = c("P"), reference = "s", plot_title="Suryawanshi et al")
 cowplot::ggsave2(anno.surya, device = "pdf", width = 6, height = 4, units = "in",
-                 filename = paste0(outdir, "surya_subset_heatmap.pdf"))
+                 filename = "plots_compare_reference/surya_subset_heatmap.pdf")
 show(anno.surya)

@@ -12,9 +12,13 @@ suppressPackageStartupMessages({library(org.Hs.eg.db)
   library("RColorBrewer")
   })
 
+source('scripts/00_get_started.R')
+
 # Load integrated dataset from Britt ----
-so_file="/cluster/tufts/slonimlab/rbator01/human_scrna_edlow_2021/seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE.rds"
+so_file="analysis/seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE.rds"
 so = readRDS(so_file)
+table(so@meta.data$donor, so@meta.data$covid_status)
+
 res="sub_cluster_names"
 Idents(so) = res
 
@@ -41,7 +45,7 @@ so = AddMetaData(so,
                  names$sub_cluster_names,
                  "sub_cluster_names")
 
-saveRDS(so, "/cluster/tufts//slonimlab/rbator01/human_scrna_edlow_2021/seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE_norm.rds")
+saveRDS(so, "seurat_object/seuratobj_subset_integrated_HBCs_USETHISONE_norm.rds")
 
 # PCA for quality control ----
 
